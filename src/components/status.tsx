@@ -80,7 +80,7 @@ export default function status({ data }: { data: any[] }) {
 
 					<div>
 						<h2 className="text-base font-semibold leading-7">Time spent</h2>
-						<p className="mt-1 text-sm leading-6 text-gray-600 break-all">
+						<p className="mt-1 text-sm leading-6 text-gray-600">
 							How much time you have spent working on; {data[0].application}
 						</p>
 					</div>
