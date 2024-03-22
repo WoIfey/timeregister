@@ -82,10 +82,28 @@ export default function status({ data }: { data: any[] }) {
 							alt="<-"
 							width={32}
 							height={32}
-							className="w-6 h-6"
+							className="p-1"
 						/>
 					</Link>
-					<div className="flex gap-3">
+					<div className="flex items-center gap-3">
+						<div className="flex items-center gap-2">
+							<div
+								className={classNames(
+									statuses[data[0].status.toString()],
+									'flex-none rounded-full p-1'
+								)}
+							>
+								<div className="h-2 w-2 rounded-full bg-current" />
+							</div>
+							<div
+								className={classNames(
+									environments[data[0].status ? 'Working' : 'Paused'],
+									'rounded-full flex-none py-1 px-2 text-xs font-medium ring-1 ring-inset'
+								)}
+							>
+								{data[0].status ? 'Working' : 'Paused'}
+							</div>
+						</div>
 						<h1 className="text-xl font-bold leading-7 truncate max-w-96">
 							{data[0].application}
 						</h1>
@@ -99,7 +117,43 @@ export default function status({ data }: { data: any[] }) {
 			<div>
 				<div className="m-4 lg:m-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-white/5 pb-8 md:grid-cols-3">
 					<div>
-						<h2 className="text-base font-semibold leading-7">Edit application</h2>
+						<div className="flex items-center gap-2">
+							<Image
+								src={'/timer.svg'}
+								alt="<-"
+								width={32}
+								height={32}
+								className="p-0.5"
+							/>
+							<h2 className="text-base font-semibold leading-7">Time working</h2>
+						</div>
+						<p className="mt-1 text-sm leading-6 text-gray-600">
+							Time you have spent working on; {data[0].application}
+						</p>
+					</div>
+
+					<div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
+						<div className="col-span-full">
+							<div className="text-2xl">
+								<div>{formatTimeSpent(currentTimeSpent)}</div>
+								<p className="mt-1 text-sm leading-6 text-gray-600">
+									hours; minutes; seconds
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<div>
+						<div className="flex items-center gap-2">
+							<Image
+								src={'/pencil-simple-line.svg'}
+								alt="<-"
+								width={32}
+								height={32}
+								className="p-0.5"
+							/>
+							<h2 className="text-base font-semibold leading-7">Edit application</h2>
+						</div>
 						<p className="mt-1 text-sm leading-6 text-gray-600">Not quite right?</p>
 					</div>
 
@@ -111,49 +165,6 @@ export default function status({ data }: { data: any[] }) {
 									users={data[0].users}
 									application={data[0].application}
 								/>
-							</div>
-						</div>
-					</div>
-
-					<div>
-						<h2 className="text-base font-semibold leading-7">Time spent</h2>
-						<p className="mt-1 text-sm leading-6 text-gray-600">
-							How much time you have spent working on; {data[0].application}
-						</p>
-					</div>
-
-					<div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
-						<div className="col-span-full">
-							<div className="mt-2">
-								<div>{formatTimeSpent(currentTimeSpent)}</div>
-							</div>
-						</div>
-					</div>
-
-					<div>
-						<h2 className="text-base font-semibold leading-7">Status</h2>
-						<p className="mt-1 text-sm leading-6 text-gray-600">Are you working?!</p>
-					</div>
-
-					<div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
-						<div className="col-span-full">
-							<div className="mt-2 flex items-center gap-2">
-								<div
-									className={classNames(
-										statuses[data[0].status.toString()],
-										'flex-none rounded-full p-1'
-									)}
-								>
-									<div className="h-2 w-2 rounded-full bg-current" />
-								</div>
-								<div
-									className={classNames(
-										environments[data[0].status ? 'Working' : 'Paused'],
-										'rounded-full flex-none py-1 px-2 text-xs font-medium ring-1 ring-inset'
-									)}
-								>
-									{data[0].status ? 'Working' : 'Paused'}
-								</div>
 							</div>
 						</div>
 					</div>
@@ -181,7 +192,10 @@ export default function status({ data }: { data: any[] }) {
 							<input name="id" type="hidden" value={data[0].id} />
 							<button
 								type="submit"
-								className="flex items-center rounded-md bg-green-700 px-2 py-1 text-sm font-semibold shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+								disabled={timerActive}
+								className={`${
+									timerActive ? 'cursor-not-allowed' : 'cursor-pointer'
+								} flex items-center rounded-md bg-green-700 px-2 py-1 text-sm font-semibold shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500`}
 							>
 								<Image
 									src="/play-circle.svg"

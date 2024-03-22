@@ -33,15 +33,24 @@ export default function add() {
 						alt="<-"
 						width={32}
 						height={32}
-						className="w-6 h-6"
+						className="p-1"
 					/>
 				</Link>
-				<h1 className="text-xl font-bold leading-7 italic">Make an application</h1>
+				<h1 className="text-xl font-bold leading-7">Create application</h1>
 			</header>
 			<form onSubmit={message} action={create}>
 				<div className="m-4 lg:m-8 grid grid-cols-1 gap-x-8 gap-y-10 border-b border-white/5 pb-8 md:grid-cols-3">
 					<div>
-						<h2 className="text-base font-semibold leading-7">Add Project</h2>
+						<div className="flex items-center gap-2">
+							<Image
+								src={'/plus.svg'}
+								alt="<-"
+								width={32}
+								height={32}
+								className="p-0.5"
+							/>
+							<h2 className="text-base font-semibold leading-7">Add Project</h2>
+						</div>
 						<p className="mt-1 text-sm leading-6 text-gray-600">
 							Work on a new project!
 						</p>
@@ -49,12 +58,21 @@ export default function add() {
 
 					<div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
 						<div className="col-span-full">
-							<label
-								htmlFor="users"
-								className="block mb-2 text-base font-medium text-gray-900 dark:text-white"
-							>
-								User
-							</label>
+							<div className="flex gap-2">
+								<Image
+									src={'/user.svg'}
+									alt="User"
+									width={32}
+									height={32}
+									className="p-1 mb-2"
+								/>
+								<label
+									htmlFor="users"
+									className="block pt-1 mb-2 text-base font-medium text-gray-900 dark:text-white"
+								>
+									User
+								</label>
+							</div>
 							<input
 								type="text"
 								id="users"
@@ -75,12 +93,21 @@ export default function add() {
 							</div>
 						</div>
 						<div className="col-span-full">
-							<label
-								htmlFor="application"
-								className="block mb-2 text-base font-medium text-gray-900 dark:text-white"
-							>
-								Application
-							</label>
+							<div className="flex gap-2">
+								<Image
+									src={'/app-window.svg'}
+									alt="App"
+									width={32}
+									height={32}
+									className="p-1"
+								/>
+								<label
+									htmlFor="application"
+									className="block pt-1 text-base font-medium text-gray-900 dark:text-white"
+								>
+									Application
+								</label>
+							</div>
 							<input
 								id="application"
 								name="application"

@@ -32,12 +32,21 @@ export default function UpdateModal({
 		<form onSubmit={() => confirm()} action={update} className="text-white">
 			<input name="id" type="hidden" value={id} />
 			<div>
-				<label
-					htmlFor="users"
-					className="block mb-2 text-base font-medium text-gray-900 dark:text-white"
-				>
-					User
-				</label>
+				<div className="flex gap-2">
+					<Image
+						src={'/user.svg'}
+						alt="User"
+						width={32}
+						height={32}
+						className="p-1 mb-2"
+					/>
+					<label
+						htmlFor="users"
+						className="block pt-1 mb-2 text-base font-medium text-gray-900 dark:text-white"
+					>
+						User
+					</label>
+				</div>
 				<input
 					type="text"
 					id="users"
@@ -57,13 +66,22 @@ export default function UpdateModal({
 					</span>
 				</div>
 			</div>
-			<div className="mt-5">
-				<label
-					htmlFor="application"
-					className="block mb-2 text-base font-medium text-gray-900 dark:text-white"
-				>
-					Application
-				</label>
+			<div className="mt-4">
+				<div className="flex gap-2">
+					<Image
+						src={'/app-window.svg'}
+						alt="App"
+						width={32}
+						height={32}
+						className="p-1"
+					/>
+					<label
+						htmlFor="application"
+						className="block pt-1 text-base font-medium text-gray-900 dark:text-white"
+					>
+						Application
+					</label>
+				</div>
 				<input
 					id="application"
 					name="application"
