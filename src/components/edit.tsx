@@ -42,7 +42,7 @@ export default function UpdateModal({
 					type="text"
 					id="users"
 					name="users"
-					placeholder="User"
+					placeholder="GitHub"
 					maxLength={40}
 					value={users}
 					onChange={e => setUsers(e.target.value)}
@@ -67,15 +67,10 @@ export default function UpdateModal({
 				<input
 					id="application"
 					name="application"
-					placeholder="Application"
+					placeholder="Portfolio"
 					maxLength={40}
 					value={application}
-					onChange={e => {
-						const newValue = e.target.value
-						if (!newValue.includes('"')) {
-							setApplication(newValue)
-						}
-					}}
+					onChange={e => setApplication(e.target.value)}
 					className={`mt-2 outline-none block w-full rounded-md border-0 bg-white/10 p-2.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
 						application.length === 40 ? 'ring-red-500 focus:ring-red-700' : ''
 					}`}

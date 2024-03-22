@@ -5,13 +5,13 @@ import { create } from '@/app/actions'
 import { useState } from 'react'
 
 export default function add() {
-	const [user, setUser] = useState('')
+	const [users, setUsers] = useState('')
 	const [application, setApplication] = useState('')
 	const [status, setStatus] = useState<string | null>(null)
 
 	const message = () => {
 		try {
-			setUser('')
+			setUsers('')
 			setApplication('')
 			setStatus('Application added!')
 			setTimeout(() => {
@@ -49,42 +49,53 @@ export default function add() {
 
 					<div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
 						<div className="col-span-full">
-							<label htmlFor="users" className="block text-sm font-medium leading-6">
+							<label
+								htmlFor="users"
+								className="block mb-2 text-base font-medium text-gray-900 dark:text-white"
+							>
 								User
 							</label>
-							<div className="mt-2">
-								<input
-									type="text"
-									id="users"
-									name="users"
-									placeholder="User"
-									maxLength={40}
-									value={user}
-									onChange={e => setUser(e.target.value)}
-									required
-									className={`outline-none block w-full rounded-md border-0 bg-white/5 p-2.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6`}
-								/>
+							<input
+								type="text"
+								id="users"
+								name="users"
+								placeholder="GitHub"
+								maxLength={40}
+								value={users}
+								onChange={e => setUsers(e.target.value)}
+								required
+								className={`outline-none block w-full rounded-md border-0 bg-white/10 p-2.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
+									users.length === 40 ? 'ring-red-500 focus:ring-red-700' : ''
+								}`}
+							/>
+							<div className="mt-2 text-xs">
+								<span className={`${users.length === 40 ? 'text-red-500' : ''}`}>
+									{users.length}/40
+								</span>
 							</div>
 						</div>
 						<div className="col-span-full">
 							<label
 								htmlFor="application"
-								className="block text-sm font-medium leading-6"
+								className="block mb-2 text-base font-medium text-gray-900 dark:text-white"
 							>
 								Application
 							</label>
-							<div className="mt-2">
-								<input
-									type="text"
-									id="application"
-									name="application"
-									placeholder="Project"
-									maxLength={40}
-									value={application}
-									onChange={e => setApplication(e.target.value)}
-									required
-									className={`outline-none block w-full rounded-md border-0 bg-white/5 p-2.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6`}
-								/>
+							<input
+								id="application"
+								name="application"
+								placeholder="Portfolio"
+								maxLength={40}
+								value={application}
+								onChange={e => setApplication(e.target.value)}
+								className={`mt-2 outline-none block w-full rounded-md border-0 bg-white/10 p-2.5 shadow-sm ring-1 ring-inset focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6 ${
+									application.length === 40 ? 'ring-red-500 focus:ring-red-700' : ''
+								}`}
+							/>
+							<div className="mt-2 text-xs">
+								<span className={`${application.length === 40 ? 'text-red-500' : ''}`}>
+									{application.length}/40
+								</span>
 							</div>
 						</div>
 					</div>

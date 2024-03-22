@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { formatTimeSpent } from '@/utils/formatTime'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { refresh } from '@/app/actions'
 
 const statuses: { [key: string]: string } = {
@@ -18,36 +18,35 @@ function classNames(...classes: string[]) {
 
 export default function applications({ data }: { data: any[] }) {
 	const [timeSpent, setTimeSpent] = useState(data.map(app => app.time_spent))
+	const intervalIdsRef = useRef<NodeJS.Timeout[]>([])
 
 	useEffect(() => {
-		const intervalIds = data.map((app, index) => {
-			if (app.status) {
-				const id = setInterval(() => {
-					setTimeSpent(prevTimeSpent => {
-						const newTimeSpent = [...prevTimeSpent]
-						newTimeSpent[index] += 1
-						return newTimeSpent
-					})
-				}, 1000)
-				return id
-			}
-			return null
-		})
+		intervalIdsRef.current.forEach(id => clearInterval(id))
+		intervalIdsRef.current = []
+
+		const newIntervalIds = data
+			.map((app, index) => {
+				if (app.status) {
+					const id = setInterval(() => {
+						setTimeSpent(prevTimeSpent => {
+							const newTimeSpent = [...prevTimeSpent]
+							newTimeSpent[index] += 1
+							return newTimeSpent
+						})
+					}, 1000)
+					return id
+				}
+				return null
+			})
+			.filter(id => id !== null) as NodeJS.Timeout[]
+
+		intervalIdsRef.current = newIntervalIds
 
 		return () => {
-			intervalIds.forEach(id => {
-				if (id) clearInterval(id)
-			})
+			intervalIdsRef.current.forEach(id => clearInterval(id))
 		}
 	}, [data])
 
-	useEffect(() => {
-		const timer = setInterval(() => {
-			refresh()
-		}, 1000)
-
-		return () => clearInterval(timer)
-	}, [])
 	return (
 		<ul
 			role="list"
