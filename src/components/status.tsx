@@ -3,8 +3,8 @@ import Edit from '@/components/edit'
 import Delete from '@/components/delete'
 import Link from 'next/link'
 import Image from 'next/image'
-import { startTimer, stopTimer } from '@/app/actions'
-import { useState } from 'react'
+import { refresh, startTimer, stopTimer } from '@/app/actions'
+import { useEffect, useRef, useState } from 'react'
 import { formatTimeSpent } from '@/utils/formatTime'
 
 const statuses: { [key: string]: string } = {
@@ -21,16 +21,53 @@ function classNames(...classes: string[]) {
 
 export default function status({ data }: { data: any[] }) {
 	const [timerActive, setTimerActive] = useState(false)
+	const [currentTimeSpent, setCurrentTimeSpent] = useState(data[0].time_spent)
+	const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null)
+
+	const hasRun = useRef(false)
+
+	useEffect(() => {
+		if (!hasRun.current) {
+			hasRun.current = true
+			if (data[0].status) {
+				handleStart()
+			}
+		}
+
+		return () => {
+			if (intervalId) {
+				clearInterval(intervalId)
+			}
+		}
+	}, [data[0].status])
 
 	const handleStart = () => {
 		startTimer(data[0].id)
 		setTimerActive(true)
+		const id = setInterval(() => {
+			setCurrentTimeSpent((prevTime: number) => prevTime + 1)
+		}, 1000)
+		setIntervalId(id)
+		refresh()
 	}
 
 	const handleStop = () => {
 		stopTimer(data[0].id)
 		setTimerActive(false)
+		if (intervalId) {
+			clearInterval(intervalId)
+			setIntervalId(null)
+		}
+		refresh()
 	}
+
+	useEffect(() => {
+		const timer = setInterval(() => {
+			refresh()
+		}, 1000)
+
+		return () => clearInterval(timer)
+	}, [])
 
 	return (
 		<div className="bg-slate-900/60 w-full xl:w-1/2 text-white">
@@ -88,7 +125,7 @@ export default function status({ data }: { data: any[] }) {
 					<div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 md:col-span-2">
 						<div className="col-span-full">
 							<div className="mt-2">
-								<div>{formatTimeSpent(data[0].time_spent)}</div>
+								<div>{formatTimeSpent(currentTimeSpent)}</div>
 							</div>
 						</div>
 					</div>
@@ -123,36 +160,40 @@ export default function status({ data }: { data: any[] }) {
 				</div>
 
 				<div className="p-4 lg:p-8 pt-0 lg:pt-0 flex items-center justify-end gap-x-3">
-					<form className="flex gap-2">
-						<button
-							type="button"
-							onClick={handleStop}
-							className="flex items-center rounded-md bg-red-700 px-2 py-1 text-sm font-semibold shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
-						>
-							<Image
-								src="/pause-circle.svg"
-								alt="Stop"
-								width={32}
-								height={32}
-								className="p-1"
-							/>
-							<span className="mr-2">Stop</span>
-						</button>
-						<button
-							type="button"
-							onClick={handleStart}
-							className="flex items-center rounded-md bg-green-700 px-2 py-1 text-sm font-semibold shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
-						>
-							<Image
-								src="/play-circle.svg"
-								alt="Start"
-								width={32}
-								height={32}
-								className="p-1"
-							/>
-							<span className="mr-2">{timerActive ? 'Running' : 'Start'}</span>
-						</button>
-					</form>
+					<div className="flex gap-2">
+						<form action={handleStop}>
+							<input name="id" type="hidden" value={data[0].id} />
+							<button
+								type="submit"
+								className="flex items-center rounded-md bg-red-700 px-2 py-1 text-sm font-semibold shadow-sm hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
+							>
+								<Image
+									src="/pause-circle.svg"
+									alt="Stop"
+									width={32}
+									height={32}
+									className="p-1"
+								/>
+								<span className="mr-2">Stop</span>
+							</button>
+						</form>
+						<form action={handleStart}>
+							<input name="id" type="hidden" value={data[0].id} />
+							<button
+								type="submit"
+								className="flex items-center rounded-md bg-green-700 px-2 py-1 text-sm font-semibold shadow-sm hover:bg-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-500"
+							>
+								<Image
+									src="/play-circle.svg"
+									alt="Start"
+									width={32}
+									height={32}
+									className="p-1"
+								/>
+								<span className="mr-2">{timerActive ? 'Running' : 'Start'}</span>
+							</button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>

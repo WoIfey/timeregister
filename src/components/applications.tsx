@@ -1,5 +1,8 @@
+'use client'
 import Link from 'next/link'
 import { formatTimeSpent } from '@/utils/formatTime'
+import { useEffect, useState } from 'react'
+import { refresh } from '@/app/actions'
 
 const statuses: { [key: string]: string } = {
 	false: 'text-gray-500 bg-gray-100/10',
@@ -14,12 +17,41 @@ function classNames(...classes: string[]) {
 }
 
 export default function applications({ data }: { data: any[] }) {
+	const [timeSpent, setTimeSpent] = useState(data.map(app => app.time_spent))
+
+	useEffect(() => {
+		const intervalIds = data.map((app, index) => {
+			if (app.status) {
+				const id = setInterval(() => {
+					setTimeSpent(prevTimeSpent => {
+						const newTimeSpent = [...prevTimeSpent]
+						newTimeSpent[index] += 1
+						return newTimeSpent
+					})
+				}, 1000)
+				return id
+			}
+			return null
+		})
+
+		return () => {
+			intervalIds.forEach(id => {
+				if (id) clearInterval(id)
+			})
+		}
+	}, [data])
+
+	/* 	useEffect(() => {
+		setInterval(() => {
+			refresh()
+		}, 10000)
+	}, [data]) */
 	return (
 		<ul
 			role="list"
 			className="divide-y divide-white/5 overflow-y-auto max-h-[calc(100vh-9rem)]"
 		>
-			{data.map(app => (
+			{data.map((app, index) => (
 				<li
 					key={app.id}
 					className="relative flex items-center space-x-4 px-4 py-4 sm:px-6 lg:px-8"
@@ -59,7 +91,7 @@ export default function applications({ data }: { data: any[] }) {
 								{app.status ? 'Working' : 'Paused'}
 							</div>
 							<span className="text-white ml-2">
-								{formatTimeSpent(app.time_spent)}
+								{formatTimeSpent(timeSpent[index])}
 							</span>
 						</div>
 					</div>

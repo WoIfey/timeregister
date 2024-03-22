@@ -32,28 +32,28 @@ export const refresh = async () => {
     revalidatePath('/')
 }
 
-const timerIds = new Map<string, NodeJS.Timeout | null>();
+const timerIds = new Map<string, NodeJS.Timeout | null>()
 
-export const startTimer = (id: string) => {
+export const startTimer = async (id: string) => {
     if (timerIds.has(id)) {
-        const existingTimer = timerIds.get(id);
+        const existingTimer = timerIds.get(id)
         if (existingTimer) {
-            clearInterval(existingTimer);
-            timerIds.set(id, null);
+            clearInterval(existingTimer)
+            timerIds.set(id, null)
         }
     }
 
-    revalidatePath('/');
     const timer = setInterval(async () => {
-        await incrementTimeDB(id);
-        revalidatePath('/');
-    }, 1000);
-    timerIds.set(id, timer);
+        await incrementTimeDB(id)
+        revalidatePath('/')
+    }, 1000)
+    timerIds.set(id, timer)
+    revalidatePath('/')
 }
 
 export const stopTimer = async (id: string) => {
     if (timerIds.has(id)) {
-        const timer = timerIds.get(id);
+        const timer = timerIds.get(id)
         if (timer) {
             clearInterval(timer)
             timerIds.set(id, null)
