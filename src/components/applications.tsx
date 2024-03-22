@@ -41,11 +41,13 @@ export default function applications({ data }: { data: any[] }) {
 		}
 	}, [data])
 
-	/* 	useEffect(() => {
-		setInterval(() => {
+	useEffect(() => {
+		const timer = setInterval(() => {
 			refresh()
-		}, 10000)
-	}, [data]) */
+		}, 1000)
+
+		return () => clearInterval(timer)
+	}, [])
 	return (
 		<ul
 			role="list"
